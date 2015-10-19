@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Component from './Component';
-import Stage from './Stage';
 import update from 'react-addons-update';
 
 import Stage from './stage';

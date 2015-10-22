@@ -4,50 +4,53 @@ import update from 'react-addons-update';
 
 import Stage from './stage';
 import Previews from './previews';
-import AddButton from './addButton';
 import Selected from './selected';
 import SaveFormation from './saveFormation';
-import { initialState } from './constants';
+import Holding from './holding';
+import initialState from './constants';
 
 var App = React.createClass({
+  propTypes: {
+    formations: React.PropTypes.arrayOf(
+      React.PropTypes.shape({
+        dancer: React.PropTypes.number,
+        position: React.PropTypes.shape({
+          top: React.PropTypes.number,
+          left: React.PropTypes.number
+        })
+      })
+    )
+  },
+
+  getDefaultProps: function() {
+    return initialState.formations;
+  },
 
   getInitialState: () => initialState,
 
   // adds a dancer to the currently editing formation
   addDancer: function() {
-    var {formations, editing} = this.state;
-    var newFormations = update(
-      formations, {[editing]: {$push: [this._newDancer()]}}
-    );
-    this.setState({formations: newFormations});
+    let {dancers} = this.state;
+    dancers = update(dancers, {$push: [this._newDancer()]});
+    this.setState({dancers});
+  },
+
+  removeDancer: function(dancer) {
+    let {dancers} = this.state;
+    dancers = update(dancers, {$splice: [[dancer, 1]]});
+    this.setState({dancers});
   },
 
   // helper function to make a new dancer
   _newDancer: function() {
-    var {formations, editing} = this.state;
-    var dancers = formations[editing];
-    return {
-      position: {
-        top: 0,
-        left: 0
-      },
-      name: `Dancer ${dancers.length + 1}`
-    };
+    return `Dancer ${this.state.dancers.length + 1}`;
   },
 
   // updates a dancer name to newName
   setDancerName: function(newName) {
-    var {formations, editing, selectedDancer} = this.state;
-    var newFormations = update(
-      formations, {
-        [editing]: {
-          [selectedDancer]: {
-            name: {$set: newName}
-          }
-        }
-      }
-    );
-    this.setState({formations: newFormations});
+    let {dancers, selectedDancer} = this.state;
+    dancers = update(dancers, {[selectedDancer]: {$set: newName}});
+    this.setState({dancers});
   },
 
   // sets the index of the currently selected dancer
@@ -76,22 +79,30 @@ var App = React.createClass({
     this.setState({editing: index});
   },
 
+  addDancerToFormation: function(dancer) {
+    let {formations, editing} = this.state;
+    formations = update(
+      formations, {
+        [editing]:
+          {$push: [{dancer, position: {top: 0, left: 0}}]}
+      });
+    this.setState({formations});
+  },
+
   render: function() {
-    var {formations, editing, selectedDancer} = this.state;
-    var dancers = formations[editing];
+    var {formations, editing, selectedDancer, dancers} = this.state;
+    var formation = formations[editing];
     var dancer = dancers[selectedDancer];
 
     return (
       <div>
         <Stage
+          formation={formation}
           dancers={dancers}
-          addDancer={this.addDancer}
-          setDancerName={this.setDancerName}
           setSelectedDancer={this.setSelectedDancer}
           selectedDancer={this.state.selectedDancer}
           updateDancerPosition={this.updateDancerPosition}
           />
-        <AddButton addDancer={this.addDancer}/>
         <Selected
           dancer={dancer}
           setDancerName={this.setDancerName}
@@ -101,6 +112,13 @@ var App = React.createClass({
           formations={formations}
           editing={editing}
           setEditingFormation={this.setEditingFormation}
+          />
+        <Holding
+          dancers={dancers}
+          formation={formation}
+          addDancerToFormation={this.addDancerToFormation}
+          addDancer={this.addDancer}
+          removeDancer={this.removeDancer}
           />
       </div>
     );

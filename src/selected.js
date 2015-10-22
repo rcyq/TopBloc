@@ -4,7 +4,7 @@ var Selected = React.createClass({
 
   getInitialState: function() {
     if (this.props.dancer) {
-      return {value: this.props.dancer.name};
+      return {value: this.props.dancer};
     } else {
       return {value: ''};
     }
@@ -12,7 +12,7 @@ var Selected = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     this.setState({
-      value: nextProps.dancer.name
+      value: nextProps.dancer
     });
   },
 
@@ -31,9 +31,6 @@ var Selected = React.createClass({
           value={this.state.value}
           onChange={this.handleChange}
           />
-        <button>
-          Delete
-        </button>
       </div>
     );
   }

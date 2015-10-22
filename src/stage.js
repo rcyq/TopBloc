@@ -21,15 +21,15 @@ var Stage = React.createClass({
 
     return (
       <div style={divStyle}>
-        {this.props.dancers.map(function(d, i) {
+        {this.props.formation.map(function(d, i) {
           return (
             <Dancer
               radius={100}
               key={i}
               position={d.position}
-              updateDancerPosition={this.updateDancerPosition.bind(this, i)}
-              setSelectedDancer={this.setSelectedDancer.bind(this, i)}
-              name={d.name}
+              updateDancerPosition={this.updateDancerPosition.bind(this, d.dancer)}
+              setSelectedDancer={this.setSelectedDancer.bind(this, d.dancer)}
+              name={this.props.dancers[d.dancer]}
               />
           );
         }.bind(this))}

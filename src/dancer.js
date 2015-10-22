@@ -18,8 +18,9 @@ var Dancer = React.createClass({
     var dancerStyle = {
       height: this.props.radius + 'px',
       width: this.props.radius + 'px',
-      background: 'blue',
-      boxSizing: 'border-box'
+      background: '#c9e5f2',
+      boxSizing: 'border-box',
+      position: 'absolute'
     };
 
     return (
@@ -35,6 +36,7 @@ var Dancer = React.createClass({
         >
         <div
           style={dancerStyle}>
+          <span>{this.props.name}</span>
         </div>
       </Draggable>
     );

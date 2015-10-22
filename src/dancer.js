@@ -36,6 +36,7 @@ var Dancer = React.createClass({
         >
         <div
           style={dancerStyle}>
+          <span>{this.props.name}</span>
         </div>
       </Draggable>
     );
